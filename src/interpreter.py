@@ -19,6 +19,7 @@ class ScorpkContext:
     def __init__(self):
         self.variables: Dict[str, Variable] = {}
         self.functions: Dict[str, Callable] = {}
+        self.intents: Dict[str, Dict[str, list]] = {}  # Almacena intenciones y sus estados
 
     def set_var(self, name: str, value: Any, locked: bool = False):
         self.variables[name] = Variable(name, value, locked)
@@ -35,6 +36,14 @@ class ScorpkContext:
         if name not in self.functions:
             raise ValueError(f"Función {name} no definida")
         return self.functions[name]
+
+    def set_intent(self, name: str, estados: Dict[str, list]):
+        self.intents[name] = estados
+
+    def get_intent(self, name: str) -> Dict[str, list]:
+        if name not in self.intents:
+            raise ValueError(f"Intención {name} no definida")
+        return self.intents[name]
 
 # Intérprete de Scorpk
 class ScorpkInterpreter:
@@ -147,11 +156,27 @@ class ScorpkInterpreter:
                 elif current_estado and line:
                     estados[current_estado].append(line)
                 i += 1
+            self.context.set_intent(intent_name, estados)
             for estado, actions in estados.items():
                 print(f"Ejecutando estado {estado} en intención {intent_name}")
                 for action in actions:
                     self.parse_line(action, lines, i)
             return i + 1
+
+        # Activar intención: activar nombre estado;
+        if match := re.match(r"activar (\w+) (\w+);", line):
+            intent_name, estado = match.groups()
+            try:
+                estados = self.context.get_intent(intent_name)
+                if estado in estados:
+                    print(f"Ejecutando estado {estado} en intención {intent_name}")
+                    for action in estados[estado]:
+                        self.parse_line(action, lines, index)
+                else:
+                    print(f"Error: Estado {estado} no definido en intención {intent_name}")
+            except ValueError as e:
+                print(f"Error: {e}")
+            return index + 1
 
         # Concurrencia: paralelo { ... }
         if line == "paralelo {":
