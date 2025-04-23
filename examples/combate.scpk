@@ -1,0 +1,21 @@
+let poder = 50;
+let estado = "En guardia";
+
+poder = poder + 20;
+
+fn mostrar_combate() {
+    print(estado);
+    print(poder);
+}
+
+intent enfrentamiento {
+    estado ataque:
+        print("Golpe crítico!");
+    estado esquivar:
+        print("Esquivando el golpe!");
+}
+
+paralelo {
+    mostrar_combate();
+    print("Batalla en curso");
+}
