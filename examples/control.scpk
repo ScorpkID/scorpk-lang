@@ -16,6 +16,7 @@ intent enfrentamiento {
 }
 
 activar enfrentamiento ataque;
+activar enfrentamiento esquivar;
 
 paralelo {
     mostrar_combate();

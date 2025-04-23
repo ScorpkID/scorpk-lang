@@ -157,10 +157,6 @@ class ScorpkInterpreter:
                     estados[current_estado].append(line)
                 i += 1
             self.context.set_intent(intent_name, estados)
-            for estado, actions in estados.items():
-                print(f"Ejecutando estado {estado} en intención {intent_name}")
-                for action in actions:
-                    self.parse_line(action, lines, i)
             return i + 1
 
         # Activar intención: activar nombre estado;

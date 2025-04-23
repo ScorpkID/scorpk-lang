@@ -1,0 +1,26 @@
+let vida = 100;
+let energia = 50;
+let mensaje = "Combatiendo";
+
+fn mostrar_estado() {
+    print(mensaje);
+    print(vida);
+    print(energia);
+}
+
+intent combate {
+    estado golpear:
+        print("¡Golpe directo!");
+        energia = energia - 15;
+    estado curar:
+        print("Recuperando vida!");
+        vida = vida + 25;
+}
+
+activar combate golpear;
+activar combate curar;
+
+paralelo {
+    mostrar_estado();
+    print("Turno en progreso");
+}
