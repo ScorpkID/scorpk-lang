@@ -1,5 +1,9 @@
 import re
 import threading
+import sys
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
 from dataclasses import dataclass
 from typing import Dict, Any, Callable
 
@@ -36,19 +40,33 @@ class ScorpkContext:
 class ScorpkInterpreter:
     def __init__(self):
         self.context = ScorpkContext()
-        self.current_indent = 0
 
     def execute(self, code: str):
         lines = code.strip().split("\n")
         i = 0
         while i < len(lines):
-            line = lines[i].strip()
+            line = lines[i].rstrip()
             if not line or line.startswith("//"):
                 i += 1
                 continue
             i = self.parse_line(line, lines, i)
 
+    def eval_expr(self, expr: str) -> Any:
+        # Evalúa expresiones como "variable + número"
+        if match := re.match(r"(\w+) \+ (\d+)", expr):
+            var_name, num = match.groups()
+            try:
+                var_value = self.context.get_var(var_name)
+                if isinstance(var_value, int):
+                    return var_value + int(num)
+                raise ValueError(f"Operación no soportada para {var_name}")
+            except ValueError as e:
+                print(f"Error: {e}")
+                return None
+        return None
+
     def parse_line(self, line: str, lines: list, index: int) -> int:
+        line = line.strip()
         # Declaración de variable: let nombre = valor;
         if match := re.match(r"let (\w+) = (.+);", line):
             name, value = match.groups()
@@ -57,6 +75,19 @@ class ScorpkInterpreter:
                 print(f"Error: No se puede modificar {name}, está bloqueada")
             else:
                 self.context.set_var(name, value)
+            return index + 1
+
+        # Asignación con expresión: nombre = expr;
+        if match := re.match(r"(\w+) = (.+);", line):
+            name, expr = match.groups()
+            if name in self.context.variables and self.context.variables[name].locked:
+                print(f"Error: No se puede modificar {name}, está bloqueada")
+            else:
+                value = self.eval_expr(expr)
+                if value is not None:
+                    self.context.set_var(name, value)
+                else:
+                    print(f"Error: Expresión no válida: {expr}")
             return index + 1
 
         # Bloqueo de variable: lock(nombre);
@@ -73,12 +104,12 @@ class ScorpkInterpreter:
             func_name = match.group(1)
             body = []
             i = index + 1
-            while i < len(lines) and not lines[i].strip() == "}":
+            while i < len(lines) and lines[i].rstrip() != "}":
                 body.append(lines[i])
                 i += 1
             def func():
                 for body_line in body:
-                    self.parse_line(body_line.strip(), lines, i)
+                    self.parse_line(body_line, lines, i)
             self.context.set_func(func_name, func)
             return i + 1
 
@@ -86,26 +117,34 @@ class ScorpkInterpreter:
         if match := re.match(r"intent (\w+) \{", line):
             intent_name = match.group(1)
             i = index + 1
-            while i < len(lines) and not lines[i].strip() == "}":
+            estados = []
+            while i < len(lines) and lines[i].rstrip() != "}":
                 if match := re.match(r"\s*estado (\w+):", lines[i]):
-                    estado = match.group(1)
-                    print(f"Ejecutando estado {estado} en intención {intent_name}")
+                    estados.append(match.group(1))
                 i += 1
+            for estado in estados:
+                print(f"Ejecutando estado {estado} en intención {intent_name}")
             return i + 1
 
         # Concurrencia: paralelo { ... }
         if line == "paralelo {":
             tasks = []
             i = index + 1
-            while i < len(lines) and not lines[i].strip() == "}":
-                tasks.append(lines[i].strip())
+            while i < len(lines) and lines[i].rstrip() != "}":
+                task = lines[i].strip()
+                if task:
+                    tasks.append(task)
                 i += 1
             threads = []
             for task in tasks:
                 if match := re.match(r"(\w+)\(\);", task):
                     func_name = match.group(1)
-                    thread = threading.Thread(target=lambda: self.context.get_func(func_name)())
-                    threads.append(thread)
+                    try:
+                        func = self.context.get_func(func_name)
+                        thread = threading.Thread(target=func)
+                        threads.append(thread)
+                    except ValueError as e:
+                        print(f"Error: {e}")
                 elif match := re.match(r"print\((.+)\);", task):
                     msg = match.group(1).strip('"')
                     thread = threading.Thread(target=lambda: print(msg))
@@ -125,22 +164,24 @@ class ScorpkInterpreter:
                 print(f"Error: {e}")
             return index + 1
 
-        # Impresión: print("texto");
+        # Impresión: print("texto"); o print(nombre);
         if match := re.match(r"print\((.+)\);", line):
-            msg = match.group(1).strip('"')
-            print(msg)
+            arg = match.group(1).strip('"')
+            try:
+                value = self.context.get_var(arg) if arg in self.context.variables else arg
+                print(value)
+            except ValueError as e:
+                print(f"Error: {e}")
             return index + 1
 
         print(f"Error: Línea no reconocida: {line}")
         return index + 1
 
-# Programa de prueba
 if __name__ == "__main__":
-    import sys
     if len(sys.argv) != 2:
-        print("Uso: python3 interpreter.py <archivo.scpk>")
+        print("Uso: python src/interpreter.py <archivo.scpk>")
         sys.exit(1)
-    with open(sys.argv[1], 'r') as file:
+    with open(sys.argv[1], 'r', encoding='utf-8') as file:
         code = file.read()
     interpreter = ScorpkInterpreter()
     interpreter.execute(code)

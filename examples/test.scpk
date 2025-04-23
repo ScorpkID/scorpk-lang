@@ -1,6 +1,7 @@
 let fuerza = 10;
 let mensaje = "Preparado";
-lock(fuerza);
+
+fuerza = fuerza + 5;
 
 fn mostrar_fuerza() {
     print(mensaje);
