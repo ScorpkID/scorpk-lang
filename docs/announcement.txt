@@ -1,0 +1,4 @@
+¡Scorpk v0.3 alfa ya está aquí! 🚀 Un lenguaje minimalista para simulaciones tácticas y IoT, con variables, intenciones, condicionales, y concurrencia. Clona el repo, prueba los ejemplos, y comparte tus ideas. ¡Únete a la aventura! 🧑‍💻
+
+Repo: https://github.com/ScorpkID/scorpk-lang
+#Scorpk #Programming #OpenSource
