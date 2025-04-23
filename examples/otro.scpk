@@ -1,0 +1,20 @@
+let fuerza = 10;
+let mensaje = "Preparado para la batalla";
+lock(fuerza);
+
+fn mostrar_fuerza() {
+    print(mensaje);
+    print(fuerza);
+}
+
+intent batalla {
+    estado ataque:
+        print("Lanzando ataque con toda mi fuerza");
+    estado defensa:
+        print("Escudo activado y lista para resistir");
+}
+
+paralelo {
+    mostrar_fuerza();
+    print("Operación concurrente en progreso");
+}
