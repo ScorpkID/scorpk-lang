@@ -188,6 +188,7 @@ class ScorpkInterpreter:
                 elif op == "==" and isinstance(var_value, int):
                     condition_met = var_value == num
                 if condition_met:
+                    # Manejar activar
                     if match_action := re.match(r"activar (\w+) (\w+)", action):
                         intent_name, estado = match_action.groups()
                         try:
@@ -200,20 +201,38 @@ class ScorpkInterpreter:
                                 print(f"Error: Estado {estado} no definido en intención {intent_name}")
                         except ValueError as e:
                             print(f"Error: {e}")
+                    # Manejar llamada a función
+                    elif match_action := re.match(r"(\w+)\(\)", action):
+                        func_name = match_action.group(1)
+                        try:
+                            self.context.get_func(func_name)()
+                        except ValueError as e:
+                            print(f"Error: {e}")
+                    # Otras acciones
                     else:
                         self.parse_line(action, lines, index)
             except ValueError as e:
                 print(f"Error: {e}")
             return index + 1
 
-        # Condicional con bloque: if variable (>|<|==) número { ... }
+        # Condicional con bloque: if variable (>|<|==) número { ... } [else { ... }]
         if match := re.match(r"if (\w+) (>|<|==) (\d+) \{", line):
             var_name, op, num = match.groups()
-            body = []
+            if_body = []
+            else_body = []
             i = index + 1
+            # Recolectar cuerpo del if
             while i < len(lines) and lines[i].rstrip() != "}":
-                body.append(lines[i])
+                if_body.append(lines[i])
                 i += 1
+            i += 1  # Saltar el "}"
+            # Verificar si hay else
+            if i < len(lines) and lines[i].strip() == "else {":
+                i += 1
+                while i < len(lines) and lines[i].rstrip() != "}":
+                    else_body.append(lines[i])
+                    i += 1
+                i += 1  # Saltar el "}"
             try:
                 var_value = self.context.get_var(var_name)
                 num = int(num)
@@ -225,11 +244,14 @@ class ScorpkInterpreter:
                 elif op == "==" and isinstance(var_value, int):
                     condition_met = var_value == num
                 if condition_met:
-                    for body_line in body:
-                        self.parse_line(body_line, lines, i)
+                    for body_line in if_body:
+                        self.parse_line(body_line, lines, index)
+                else:
+                    for body_line in else_body:
+                        self.parse_line(body_line, lines, index)
             except ValueError as e:
                 print(f"Error: {e}")
-            return i + 1
+            return i
 
         # Concurrencia: paralelo { ... }
         if line == "paralelo {":

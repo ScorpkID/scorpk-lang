@@ -1,0 +1,31 @@
+let amenaza = 15;
+let recursos = 60;
+let mensaje = "Evaluando táctica";
+
+fn mostrar_estado() {
+    print(mensaje);
+    print(amenaza);
+    print(recursos);
+}
+
+intent tactica {
+    estado atacar:
+        print("Iniciando ataque!");
+        recursos = recursos - 20;
+    estado replegarse:
+        print("Replegándose a posición segura!");
+        amenaza = amenaza - 10;
+}
+
+if amenaza > 20 {
+    activar tactica atacar;
+    print("Amenaza alta, atacando");
+} else {
+    activar tactica replegarse;
+    print("Amenaza baja, replegándose");
+}
+
+paralelo {
+    mostrar_estado();
+    print("Ejecutando decisión táctica");
+}

@@ -59,6 +59,16 @@ Scorpk es un lenguaje minimalista y potente. Este documento define la sintaxis d
       print("Amenaza crítica");
   }
   ```
+- Condicionales con `else`:
+  ```scorpk
+  if amenaza > 20 {
+      activar tactica atacar;
+      print("Amenaza alta");
+  } else {
+      activar tactica replegarse;
+      print("Amenaza baja");
+  }
+  ```
 
 ## Concurrencia
 - Ejecución paralela con `paralelo`:
