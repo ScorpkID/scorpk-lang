@@ -233,6 +233,8 @@ class ScorpkInterpreter:
                     else_body.append(lines[i])
                     i += 1
                 i += 1  # Saltar el "}"
+            else:
+                i += 1  # Saltar el "}" del if
             try:
                 var_value = self.context.get_var(var_name)
                 num = int(num)
@@ -248,6 +250,34 @@ class ScorpkInterpreter:
                         self.parse_line(body_line, lines, index)
                 else:
                     for body_line in else_body:
+                        self.parse_line(body_line, lines, index)
+            except ValueError as e:
+                print(f"Error: {e}")
+            return i
+
+        # Bucle while: while variable (>|<|==) número { ... }
+        if match := re.match(r"while (\w+) (>|<|==) (\d+) \{", line):
+            var_name, op, num = match.groups()
+            body = []
+            i = index + 1
+            while i < len(lines) and lines[i].rstrip() != "}":
+                body.append(lines[i])
+                i += 1
+            i += 1  # Saltar el "}"
+            try:
+                while True:
+                    var_value = self.context.get_var(var_name)
+                    num = int(num)
+                    condition_met = False
+                    if op == ">" and isinstance(var_value, int):
+                        condition_met = var_value > num
+                    elif op == "<" and isinstance(var_value, int):
+                        condition_met = var_value < num
+                    elif op == "==" and isinstance(var_value, int):
+                        condition_met = var_value == num
+                    if not condition_met:
+                        break
+                    for body_line in body:
                         self.parse_line(body_line, lines, index)
             except ValueError as e:
                 print(f"Error: {e}")

@@ -70,6 +70,15 @@ Scorpk es un lenguaje minimalista y potente. Este documento define la sintaxis d
   }
   ```
 
+## Bucles
+- Bucles `while` para iteraciones:
+  ```scorpk
+  while recursos > 20 {
+      activar operacion consumir;
+      print("Recursos restantes:");
+  }
+  ```
+
 ## Concurrencia
 - Ejecución paralela con `paralelo`:
   ```scorpk

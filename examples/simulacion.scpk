@@ -1,0 +1,24 @@
+let recursos = 50;
+let mensaje = "Simulación en curso";
+
+fn mostrar_simulacion() {
+    print(mensaje);
+    print(recursos);
+}
+
+intent operacion {
+    estado consumir:
+        print("Consumiendo recursos!");
+        recursos = recursos - 10;
+}
+
+while recursos > 20 {
+    activar operacion consumir;
+    print("Recursos restantes:");
+    mostrar_simulacion();
+}
+
+paralelo {
+    mostrar_simulacion();
+    print("Finalizando simulación");
+}
