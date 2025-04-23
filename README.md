@@ -12,7 +12,7 @@ Scorpk es un lenguaje de programación en desarrollo, diseñado para ser rápido
 
 2. **Clonar el repositorio**:
    ```bash
-   git clone https://github.com/TuUsuario/scorpk-lang.git
+   git clone https://github.com/ScorpkId/scorpk-lang.git
    cd scorpk-lang
    ```
 
