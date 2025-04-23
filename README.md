@@ -9,6 +9,7 @@ Scorpk es un lenguaje de programación en desarrollo, diseñado para ser simple,
 - **Condicionales**: Toma decisiones dinámicas (`if variable > número acción`).
 - **Concurrencia**: Ejecuta tareas en paralelo (`paralelo`).
 - **Expresiones**: Suma, resta, multiplicación (`variable + número`, etc.).
+- **Resaltado de sintaxis**: Soporte básico en VS Code para archivos `.scpk`.
 
 ## Instalación
 1. Clona el repositorio:
@@ -72,20 +73,31 @@ Preparado para la misión
 Ejecutando plan estratégico
 ```
 
+## Capturas de Pantalla
+- **Resaltado de sintaxis en VS Code**:
+  ![Resaltado de sintaxis](docs/screenshots/syntax-highlighting.png)
+  *(Placeholder: Toma una captura de `estrategia.scpk` abierto en VS Code mostrando el resaltado.)*
+- **Salida de ejemplo**:
+  ![Salida de estrategia.scpk](docs/screenshots/estrategia-output.png)
+  *(Placeholder: Toma una captura de la salida de `estrategia.scpk` en PowerShell.)*
+
 ## Estructura del Proyecto
 - `src/interpreter.py`: Intérprete de Scorpk.
 - `docs/syntax.md`: Documentación de la sintaxis.
-- `examples/`: Programas de ejemplo (`estrategia.scpk`, `tactico.scpk`, etc.).
+- `examples/`: Programas de ejemplo (`estrategia.scpk`, `batalla.scpk`, etc.).
 - `.vscode/`: Configuración para resaltado de sintaxis en VS Code.
 
 ## Contribuir
 ¡Únete al desarrollo! Clona el repositorio, prueba los ejemplos, y reporta problemas o sugerencias en [Issues](https://github.com/ScorpkID/scorpk-lang/issues).
 
+### Lanzamiento Alfa
+Scorpk v0.3 está en fase alfa. ¡Prueba el lenguaje y comparte tus ideas! Mira nuestro anuncio en X: *(Inserta el enlace al post en X después de publicarlo)*.
+
 ## Próximos Pasos
 - Soporte para más condicionales (`<`, `==`, bloques `if`).
 - Tipado híbrido (`let x: int`, evolución dinámica).
 - Extensión completa para VS Code.
-- Lanzamiento alfa con invitación a probadores.
+- Más ejemplos complejos.
 
 ---
 

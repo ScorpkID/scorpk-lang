@@ -1,0 +1,32 @@
+let vida = 100;
+let ataque = 50;
+let defensa = 30;
+let mensaje = "Enfrentamiento iniciado";
+
+fn mostrar_batalla() {
+    print(mensaje);
+    print(vida);
+    print(ataque);
+    print(defensa);
+}
+
+intent batalla {
+    estado ofensiva:
+        print("¡Ataque total!");
+        ataque = ataque + 10;
+        vida = vida - 15;
+    estado defensiva:
+        print("¡Escudos arriba!");
+        defensa = defensa + 20;
+        ataque = ataque - 5;
+}
+
+if ataque > 40 activar batalla ofensiva;
+if defensa > 35 activar batalla defensiva;
+
+paralelo {
+    mostrar_batalla();
+    print("Batalla en curso");
+}
+
+lock(vida);
