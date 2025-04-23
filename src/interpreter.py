@@ -19,7 +19,7 @@ class ScorpkContext:
     def __init__(self):
         self.variables: Dict[str, Variable] = {}
         self.functions: Dict[str, Callable] = {}
-        self.intents: Dict[str, Dict[str, list]] = {}  # Almacena intenciones y sus estados
+        self.intents: Dict[str, Dict[str, list]] = {}
 
     def set_var(self, name: str, value: Any, locked: bool = False):
         self.variables[name] = Variable(name, value, locked)
@@ -170,6 +170,17 @@ class ScorpkInterpreter:
                         self.parse_line(action, lines, index)
                 else:
                     print(f"Error: Estado {estado} no definido en intención {intent_name}")
+            except ValueError as e:
+                print(f"Error: {e}")
+            return index + 1
+
+        # Condicional: if variable > número acción;
+        if match := re.match(r"if (\w+) > (\d+) (.+);", line):
+            var_name, num, action = match.groups()
+            try:
+                var_value = self.context.get_var(var_name)
+                if isinstance(var_value, int) and var_value > int(num):
+                    self.parse_line(action, lines, index)
             except ValueError as e:
                 print(f"Error: {e}")
             return index + 1

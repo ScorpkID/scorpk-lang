@@ -1,0 +1,23 @@
+let poder = 40;
+let mensaje = "Listo para luchar";
+
+fn mostrar_estado() {
+    print(mensaje);
+    print(poder);
+}
+
+intent combate {
+    estado atacar:
+        print("Lanzando golpe!");
+        poder = poder - 10;
+    estado descansar:
+        print("Recuperando fuerzas!");
+        poder = poder + 15;
+}
+
+if poder > 50 activar combate atacar;
+
+paralelo {
+    mostrar_estado();
+    print("Combate en curso");
+}
