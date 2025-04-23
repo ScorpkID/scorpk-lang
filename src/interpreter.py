@@ -180,7 +180,21 @@ class ScorpkInterpreter:
             try:
                 var_value = self.context.get_var(var_name)
                 if isinstance(var_value, int) and var_value > int(num):
-                    self.parse_line(action, lines, index)
+                    # Manejar activar específicamente
+                    if match_action := re.match(r"activar (\w+) (\w+)", action):
+                        intent_name, estado = match_action.groups()
+                        try:
+                            estados = self.context.get_intent(intent_name)
+                            if estado in estados:
+                                print(f"Ejecutando estado {estado} en intención {intent_name}")
+                                for sub_action in estados[estado]:
+                                    self.parse_line(sub_action, lines, index)
+                            else:
+                                print(f"Error: Estado {estado} no definido en intención {intent_name}")
+                        except ValueError as e:
+                            print(f"Error: {e}")
+                    else:
+                        self.parse_line(action, lines, index)
             except ValueError as e:
                 print(f"Error: {e}")
             return index + 1

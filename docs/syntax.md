@@ -48,8 +48,8 @@ Scorpk es un lenguaje minimalista y potente. Este documento define la sintaxis d
 ## Condicionales
 - Ejecución condicional con `if`:
   ```scorpk
-  if poder > 50 print("Fuerte"); // Ejecuta acción si variable > número
-  if energia > 30 activar combate atacar; // Combina con intenciones
+  if poder > 50 print("Fuerte"); // Imprime si variable > número
+  if energia > 30 activar combate atacar; // Activa un estado si variable > número
   ```
 
 ## Concurrencia

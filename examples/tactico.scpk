@@ -1,0 +1,26 @@
+let salud = 80;
+let energia = 30;
+let mensaje = "En posición";
+
+fn mostrar_tactico() {
+    print(mensaje);
+    print(salud);
+    print(energia);
+}
+
+intent estrategia {
+    estado avanzar:
+        print("Avanzando al objetivo!");
+        energia = energia - 10;
+    estado retirarse:
+        print("Retirándose a posición segura!");
+        salud = salud + 20;
+}
+
+if energia > 25 activar estrategia avanzar;
+if salud > 75 activar estrategia retirarse;
+
+paralelo {
+    mostrar_tactico();
+    print("Maniobra en curso");
+}
