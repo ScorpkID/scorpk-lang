@@ -1,20 +1,21 @@
-let fuerza = 10;
-let mensaje = "Preparado para la batalla";
-lock(fuerza);
+let energia = 20;
+let estado = "Listo";
 
-fn mostrar_fuerza() {
-    print(mensaje);
-    print(fuerza);
+fn mostrar_estado() {
+    print(estado);
+    print(energia);
 }
 
-intent batalla {
-    estado ataque:
-        print("Lanzando ataque con toda mi fuerza");
-    estado defensa:
-        print("Escudo activado y lista para resistir");
+energia = energia + 10;
+
+intent mision {
+    estado activa:
+        print("Misión en curso!");
+    estado completada:
+        print("Misión exitosa!");
 }
 
 paralelo {
-    mostrar_fuerza();
-    print("Operación concurrente en progreso");
+    mostrar_estado();
+    print("Tareas simultáneas");
 }

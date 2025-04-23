@@ -52,13 +52,33 @@ class ScorpkInterpreter:
             i = self.parse_line(line, lines, i)
 
     def eval_expr(self, expr: str) -> Any:
-        # Evalúa expresiones como "variable + número"
+        # Evalúa expresiones como "variable + número" o "variable * número"
         if match := re.match(r"(\w+) \+ (\d+)", expr):
             var_name, num = match.groups()
             try:
                 var_value = self.context.get_var(var_name)
                 if isinstance(var_value, int):
                     return var_value + int(num)
+                raise ValueError(f"Operación no soportada para {var_name}")
+            except ValueError as e:
+                print(f"Error: {e}")
+                return None
+        elif match := re.match(r"(\w+) - (\d+)", expr):
+            var_name, num = match.groups()
+            try:
+                var_value = self.context.get_var(var_name)
+                if isinstance(var_value, int):
+                    return var_value - int(num)
+                raise ValueError(f"Operación no soportada para {var_name}")
+            except ValueError as e:
+                print(f"Error: {e}")
+                return None
+        elif match := re.match(r"(\w+) \* (\d+)", expr):
+            var_name, num = match.groups()
+            try:
+                var_value = self.context.get_var(var_name)
+                if isinstance(var_value, int):
+                    return var_value * int(num)
                 raise ValueError(f"Operación no soportada para {var_name}")
             except ValueError as e:
                 print(f"Error: {e}")
@@ -116,14 +136,21 @@ class ScorpkInterpreter:
         # Intención: intent nombre { ... }
         if match := re.match(r"intent (\w+) \{", line):
             intent_name = match.group(1)
+            estados = {}
             i = index + 1
-            estados = []
+            current_estado = None
             while i < len(lines) and lines[i].rstrip() != "}":
-                if match := re.match(r"\s*estado (\w+):", lines[i]):
-                    estados.append(match.group(1))
+                line = lines[i].strip()
+                if match := re.match(r"estado (\w+):", line):
+                    current_estado = match.group(1)
+                    estados[current_estado] = []
+                elif current_estado and line:
+                    estados[current_estado].append(line)
                 i += 1
-            for estado in estados:
+            for estado, actions in estados.items():
                 print(f"Ejecutando estado {estado} en intención {intent_name}")
+                for action in actions:
+                    self.parse_line(action, lines, i)
             return i + 1
 
         # Concurrencia: paralelo { ... }

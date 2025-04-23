@@ -1,0 +1,23 @@
+let temperatura = 25;
+let modo = "Normal";
+
+fn mostrar_sensor() {
+    print(modo);
+    print(temperatura);
+}
+
+temperatura = temperatura + 10;
+
+intent sensor {
+    estado alta:
+        print("Temperatura alta detectada!");
+        temperatura = temperatura - 5;
+    estado normal:
+        print("Temperatura estable.");
+        temperatura = temperatura * 1;
+}
+
+paralelo {
+    mostrar_sensor();
+    print("Monitoreo activo");
+}

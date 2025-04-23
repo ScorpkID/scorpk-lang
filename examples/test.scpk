@@ -11,8 +11,10 @@ fn mostrar_fuerza() {
 intent batalla {
     estado ataque:
         print("Lanzando ataque!");
+        fuerza = fuerza * 2;
     estado defensa:
         print("Escudo activado!");
+        fuerza = fuerza - 3;
 }
 
 paralelo {
