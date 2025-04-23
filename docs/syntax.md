@@ -1,4 +1,4 @@
-# Sintaxis Básica de Scorpk (Versión Prototipo 0.3)
+# Sintaxis Básica de Scorpk (Versión Prototipo 0.4)
 
 Scorpk es un lenguaje minimalista y potente. Este documento define la sintaxis del prototipo actual.
 
@@ -49,7 +49,15 @@ Scorpk es un lenguaje minimalista y potente. Este documento define la sintaxis d
 - Ejecución condicional con `if`:
   ```scorpk
   if poder > 50 print("Fuerte"); // Imprime si variable > número
-  if energia > 30 activar combate atacar; // Activa un estado si variable > número
+  if energia < 30 activar combate atacar; // Activa si variable < número
+  if recursos == 40 mostrar_analisis(); // Ejecuta si variable == número
+  ```
+- Bloques `if` para múltiples acciones:
+  ```scorpk
+  if amenaza == 30 {
+      activar respuesta evacuar;
+      print("Amenaza crítica");
+  }
   ```
 
 ## Concurrencia

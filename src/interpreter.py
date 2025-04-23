@@ -174,13 +174,20 @@ class ScorpkInterpreter:
                 print(f"Error: {e}")
             return index + 1
 
-        # Condicional: if variable > número acción;
-        if match := re.match(r"if (\w+) > (\d+) (.+);", line):
-            var_name, num, action = match.groups()
+        # Condicional simple: if variable (>|<|==) número acción;
+        if match := re.match(r"if (\w+) (>|<|==) (\d+) (.+);", line):
+            var_name, op, num, action = match.groups()
             try:
                 var_value = self.context.get_var(var_name)
-                if isinstance(var_value, int) and var_value > int(num):
-                    # Manejar activar específicamente
+                num = int(num)
+                condition_met = False
+                if op == ">" and isinstance(var_value, int):
+                    condition_met = var_value > num
+                elif op == "<" and isinstance(var_value, int):
+                    condition_met = var_value < num
+                elif op == "==" and isinstance(var_value, int):
+                    condition_met = var_value == num
+                if condition_met:
                     if match_action := re.match(r"activar (\w+) (\w+)", action):
                         intent_name, estado = match_action.groups()
                         try:
@@ -198,6 +205,31 @@ class ScorpkInterpreter:
             except ValueError as e:
                 print(f"Error: {e}")
             return index + 1
+
+        # Condicional con bloque: if variable (>|<|==) número { ... }
+        if match := re.match(r"if (\w+) (>|<|==) (\d+) \{", line):
+            var_name, op, num = match.groups()
+            body = []
+            i = index + 1
+            while i < len(lines) and lines[i].rstrip() != "}":
+                body.append(lines[i])
+                i += 1
+            try:
+                var_value = self.context.get_var(var_name)
+                num = int(num)
+                condition_met = False
+                if op == ">" and isinstance(var_value, int):
+                    condition_met = var_value > num
+                elif op == "<" and isinstance(var_value, int):
+                    condition_met = var_value < num
+                elif op == "==" and isinstance(var_value, int):
+                    condition_met = var_value == num
+                if condition_met:
+                    for body_line in body:
+                        self.parse_line(body_line, lines, i)
+            except ValueError as e:
+                print(f"Error: {e}")
+            return i + 1
 
         # Concurrencia: paralelo { ... }
         if line == "paralelo {":

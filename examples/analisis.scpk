@@ -1,0 +1,30 @@
+let recursos = 50;
+let amenaza = 30;
+let mensaje = "Analizando situación";
+
+fn mostrar_analisis() {
+    print(mensaje);
+    print(recursos);
+    print(amenaza);
+}
+
+intent respuesta {
+    estado reforzar:
+        print("Enviando refuerzos!");
+        recursos = recursos - 10;
+    estado evacuar:
+        print("Evacuando zona!");
+        amenaza = amenaza - 15;
+}
+
+if recursos > 40 activar respuesta reforzar;
+if amenaza == 30 {
+    activar respuesta evacuar;
+    print("Amenaza crítica detectada");
+}
+if recursos < 45 mostrar_analisis();
+
+paralelo {
+    mostrar_analisis();
+    print("Procesando táctica");
+}
