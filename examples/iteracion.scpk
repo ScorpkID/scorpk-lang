@@ -1,0 +1,23 @@
+let conteo: int = 0;
+let mensaje: string = "Conteo táctico";
+
+fn mostrar_conteo() {
+    print(mensaje);
+    print(conteo);
+}
+
+intent operacion {
+    estado incrementar:
+        print("Incrementando conteo!");
+        conteo = conteo + 1;
+}
+
+for i in 1..5 {
+    activar operacion incrementar;
+    mostrar_conteo();
+}
+
+paralelo {
+    mostrar_conteo();
+    print("Conteo finalizado");
+}

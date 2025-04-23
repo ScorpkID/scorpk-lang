@@ -1,6 +1,6 @@
-let amenaza = 15;
-let recursos = 60;
-let mensaje = "Evaluando táctica";
+let amenaza: int = 15;
+let recursos: int = 60;
+let mensaje: string = "Evaluando táctica";
 
 fn mostrar_estado() {
     print(mensaje);

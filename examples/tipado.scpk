@@ -1,0 +1,28 @@
+let nivel: int = 50;
+let estado: string = "Activo";
+
+fn mostrar_estado() {
+    print("Estado actual:");
+    print(estado);
+    print(nivel);
+}
+
+intent sistema {
+    estado reducir:
+        print("Reduciendo nivel!");
+        nivel = nivel - 10;
+}
+
+while nivel > 30 {
+    activar sistema reducir;
+    mostrar_estado();
+}
+
+estado -> string;
+estado = "Inactivo";
+lock(estado);
+
+paralelo {
+    mostrar_estado();
+    print("Sistema finalizado");
+}

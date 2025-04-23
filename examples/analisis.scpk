@@ -1,6 +1,6 @@
-let recursos = 50;
-let amenaza = 30;
-let mensaje = "Analizando situación";
+let recursos: int = 50;
+let amenaza: int = 30;
+let mensaje: string = "Analizando situación";
 
 fn mostrar_analisis() {
     print(mensaje);
@@ -17,12 +17,16 @@ intent respuesta {
         amenaza = amenaza - 15;
 }
 
-if recursos > 40 activar respuesta reforzar;
+if recursos > 40 {
+    activar respuesta reforzar;
+}
 if amenaza == 30 {
     activar respuesta evacuar;
     print("Amenaza crítica detectada");
 }
-if recursos < 45 mostrar_analisis();
+if recursos < 45 {
+    mostrar_analisis();
+}
 
 paralelo {
     mostrar_analisis();

@@ -1,5 +1,5 @@
-let recursos = 50;
-let mensaje = "Simulación en curso";
+let recursos: int = 50;
+let mensaje: string = "Simulación en curso";
 
 fn mostrar_simulacion() {
     print(mensaje);

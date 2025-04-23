@@ -3,29 +3,38 @@
 Scorpk es un lenguaje minimalista y potente. Este documento define la sintaxis del prototipo actual.
 
 ## Variables
-- Declaración con `let`:
+- Declaración con tipo explícito:
   ```scorpk
-  let nombre = 42;        // Entero
-  let texto = "Hola";     // String
+  let nombre: int = 42;      // Entero
+  let texto: string = "Hola"; // String
+  ```
+- Declaración sin tipo (infiere int o string):
+  ```scorpk
+  let nombre = 42;           // Infiere int
+  let texto = "Hola";        // Infiere string
+  ```
+- Cambio de tipo dinámico:
+  ```scorpk
+  nombre -> string;          // Cambia tipo a string
   ```
 - Bloqueo con `lock`:
   ```scorpk
-  lock(nombre);           // Evita cambios
+  lock(nombre);              // Evita cambios
   ```
 
 ## Expresiones
-- Asignaciones con operaciones aritméticas:
+- Asignaciones con operaciones aritméticas (solo para int):
   ```scorpk
-  nombre = nombre + 5;    // Suma
-  nombre = nombre - 3;    // Resta
-  nombre = nombre * 2;    // Multiplicación
+  nombre = nombre + 5;       // Suma
+  nombre = nombre - 3;       // Resta
+  nombre = nombre * 2;       // Multiplicación
   ```
 
 ## Funciones
 - Declaración con `fn`:
   ```scorpk
   fn saludar() {
-      print(texto);       // Accede a variables del entorno
+      print(texto);          // Accede a variables del entorno
   }
   ```
 
@@ -42,11 +51,11 @@ Scorpk es un lenguaje minimalista y potente. Este documento define la sintaxis d
   ```
 - Activar un estado específico:
   ```scorpk
-  activar combate ataque; // Ejecuta solo el estado ataque
+  activar combate ataque;    // Ejecuta solo el estado ataque
   ```
 
 ## Condicionales
-- Ejecución condicional con `if`:
+- Ejecución condicional con `if` (variable debe ser int):
   ```scorpk
   if poder > 50 print("Fuerte"); // Imprime si variable > número
   if energia < 30 activar combate atacar; // Activa si variable < número
@@ -71,11 +80,18 @@ Scorpk es un lenguaje minimalista y potente. Este documento define la sintaxis d
   ```
 
 ## Bucles
-- Bucles `while` para iteraciones:
+- Bucles `while` para iteraciones (variable debe ser int):
   ```scorpk
   while recursos > 20 {
       activar operacion consumir;
       print("Recursos restantes:");
+  }
+  ```
+- Bucles `for` para rangos (variable es int):
+  ```scorpk
+  for i in 1..5 {
+      print("Iteración:");
+      print(i);
   }
   ```
 
@@ -91,8 +107,8 @@ Scorpk es un lenguaje minimalista y potente. Este documento define la sintaxis d
 ## Impresión
 - Mostrar valores o variables:
   ```scorpk
-  print("Hola");         // Imprime un texto
-  print(fuerza);         // Imprime el valor de una variable
+  print("Hola");             // Imprime un texto
+  print(fuerza);             // Imprime el valor de una variable
   ```
 
-Esta sintaxis se expandirá en futuras versiones para incluir tipado híbrido, interoperabilidad y más.
+Esta sintaxis se expandirá en futuras versiones para incluir más tipos, interoperabilidad y más.
