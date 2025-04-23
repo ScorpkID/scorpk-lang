@@ -1,0 +1,28 @@
+let fuerza = 70;
+let resistencia = 40;
+let mensaje = "Preparado para la misión";
+
+fn mostrar_estrategia() {
+    print(mensaje);
+    print(fuerza);
+    print(resistencia);
+}
+
+intent mision {
+    estado asaltar:
+        print("Asaltando la posición!");
+        fuerza = fuerza - 15;
+    estado fortificar:
+        print("Fortificando defensas!");
+        resistencia = resistencia + 20;
+}
+
+if fuerza > 60 activar mision asaltar;
+if resistencia > 50 activar mision fortificar;
+
+paralelo {
+    mostrar_estrategia();
+    print("Ejecutando plan estratégico");
+}
+
+lock(fuerza);

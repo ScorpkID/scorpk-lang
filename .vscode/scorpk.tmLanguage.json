@@ -1,0 +1,33 @@
+{
+    "name": "Scorpk",
+    "scopeName": "source.scpk",
+    "fileTypes": ["scpk"],
+    "patterns": [
+        {
+            "match": "\\b(let|fn|intent|estado|activar|if|paralelo|print)\\b",
+            "name": "keyword.control.scpk"
+        },
+        {
+            "match": "\\b(\\w+)\\s*=\\s*",
+            "name": "variable.scpk"
+        },
+        {
+            "match": "\"[^\"]*\"",
+            "name": "string.quoted.double.scpk"
+        },
+        {
+            "match": "\\b\\d+\\b",
+            "name": "constant.numeric.scpk"
+        },
+        {
+            "match": "//.*$",
+            "name": "comment.line.scpk"
+        },
+        {
+            "match": "[+\\-*>]",
+            "name": "operator.scpk"
+        }
+    ],
+    "repository": {},
+    "uuid": "a7b8c9d0-e1f2-4g3h-8i9j-k0l1m2n3o4p5"
+}
